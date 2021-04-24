@@ -14,3 +14,4 @@ spec:
       kind: Connection
       name: connection-sample
       version: v1
+  bindAsFiles: false
