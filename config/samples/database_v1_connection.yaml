@@ -3,5 +3,5 @@ kind: Connection
 metadata:
   name: connection-sample
 spec:
-  # Add fields here
-  foo: bar
+  provider: atlas
+  database: db1
