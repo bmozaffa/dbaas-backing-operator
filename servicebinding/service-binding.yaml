@@ -1,0 +1,16 @@
+apiVersion: binding.operators.coreos.com/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: example-servicebinding
+spec:
+  application:
+    group: apps
+    kind: Deployment
+    name: simple-busybox
+    resource: deployments
+    version: v1
+  services:
+    - group: database.openshift.io
+      kind: Connection
+      name: connection-sample
+      version: v1
