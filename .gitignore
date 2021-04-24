@@ -1,4 +1,4 @@
-
+config/crd/bases
 # Binaries for programs and plugins
 *.exe
 *.exe~

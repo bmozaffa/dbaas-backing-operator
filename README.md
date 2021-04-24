@@ -1,8 +1,6 @@
 Can build and deploy with `make manifests generate docker-build docker-push deploy`. This will deploy the operator to the `dbaas-backing-operator-system` namespace.
 
-The full build will currently also regenerate and overwrite the CRD. Revert the [CRD](config/crd/bases/database.openshift.io_connections.yaml) and make sure the original one is installed:
-`git checkout config/crd/bases/database.openshift.io_connections.yaml`
-`oc apply -f git checkout config/crd/bases/database.openshift.io_connections.yaml`
+The above command will also fully generate and patch the CRD, before installing it. The CRD left on the file system locally is ignored by git, as it is incomplete and should be ignored. 
 
 Create a mock [request](config/samples/database_v1_connection.yaml) to import a database: `oc create -f config/samples/database_v1_connection.yaml`. The operator will (mock) create both a configmap and a secret for the imported database and point to them from the status of the Connection object you created. To clean this up and run again later, make sure to remove all 3 objects: `oc delete Connection connection-sample; oc delete cm atlas-db1-cm; oc delete secret atlas-db1-creds`
 
