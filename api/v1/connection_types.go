@@ -25,17 +25,25 @@ import (
 
 // ConnectionSpec defines the desired state of Connection
 type ConnectionSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	//+kubebuilder:validation:Required
+	//+kubebuilder:validation:MinLength=3
+	// Provider is the database cloud name
+	Provider string `json:"provider"`
 
-	// Foo is an example field of Connection. Edit connection_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	//+kubebuilder:validation:Required
+	// Database is the name of the database instance to import
+	Database string `json:"database"`
 }
 
 // ConnectionStatus defines the observed state of Connection
 type ConnectionStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	//+kubebuilder:validation:Required
+	// DBConfigMap is the name of the ConfigMap containing the connection info
+	DBConfigMap string `json:"dbConfigMap"`
+
+	//+kubebuilder:validation:Required
+	// DBCredentials is the name of the Secret containing the database credentials
+	DBCredentials string `json:"dbCredentials"`
 }
 
 //+kubebuilder:object:root=true
