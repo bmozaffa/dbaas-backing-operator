@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-busybox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: simple-busybox
+  template:
+    metadata:
+      labels:
+        name: simple-busybox
+    spec:
+      containers:
+        - name: simple-busybox
+          # Replace this with the built image name
+          image: quay.io/bmozaffa/busybox
+          imagePullPolicy: IfNotPresent
+          command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+
