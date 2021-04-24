@@ -18,13 +18,13 @@ package controllers
 
 import (
 	"context"
-
+	"fmt"
+	databasev1 "github.com/bmozaffa/dbaas-backing-operator/api/v1"
 	"github.com/go-logr/logr"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-
-	databasev1 "github.com/bmozaffa/dbaas-backing-operator/api/v1"
 )
 
 // ConnectionReconciler reconciles a Connection object
@@ -50,7 +50,53 @@ type ConnectionReconciler struct {
 func (r *ConnectionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = r.Log.WithValues("connection", req.NamespacedName)
 
-	// your logic here
+	connection := &databasev1.Connection{}
+	if err := r.Get(ctx, req.NamespacedName, connection); err != nil {
+		return ctrl.Result{}, err
+	}
+
+	//r.Log.Info("Processing database connection")
+	//r.Log.Info(connection.Spec.Database)
+	r.Log.Info("Processing database connection", "provider", connection.Spec.Provider, "database", connection.Spec.Database)
+	if connection.Status.DBConfigMap != "" {
+		r.Log.Info("Database connection previously reconciled", "DBConfigMap", connection.Status.DBConfigMap, "DBCredentials", connection.Status.DBCredentials)
+		return ctrl.Result{}, nil
+	}
+
+	connection.Status.DBConfigMap = fmt.Sprintf("%s-%s-%s", connection.Spec.Provider, connection.Spec.Database, "cm")
+	configMap := &corev1.ConfigMap{
+		ObjectMeta: ctrl.ObjectMeta{
+			Namespace: connection.Namespace,
+			Name:      connection.Status.DBConfigMap,
+		},
+		Data: map[string]string{
+			"db.host": "example.mongodb.net",
+			"db.port": "27017",
+			"db.name": connection.Spec.Database,
+		},
+	}
+	if err := r.Create(context.TODO(), configMap); err != nil {
+		return ctrl.Result{}, err
+	}
+
+	connection.Status.DBCredentials = fmt.Sprintf("%s-%s-%s", connection.Spec.Provider, connection.Spec.Database, "creds")
+	secret := &corev1.Secret{
+		ObjectMeta: ctrl.ObjectMeta{
+			Namespace: connection.Namespace,
+			Name:      connection.Status.DBCredentials,
+		},
+		Data: map[string][]byte{
+			"db.user":     []byte("username1"),
+			"db.password": []byte("password1"),
+		},
+	}
+	if err := r.Create(context.TODO(), secret); err != nil {
+		return ctrl.Result{}, err
+	}
+
+	if err := r.Status().Update(context.TODO(), connection); err != nil {
+		return ctrl.Result{}, err
+	}
 
 	return ctrl.Result{}, nil
 }
