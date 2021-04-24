@@ -1,0 +1,7 @@
+apiVersion: database.openshift.io/v1
+kind: Connection
+metadata:
+  name: connection-sample
+spec:
+  # Add fields here
+  foo: bar
