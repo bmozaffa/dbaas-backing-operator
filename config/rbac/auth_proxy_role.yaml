@@ -3,6 +3,10 @@ kind: ClusterRole
 metadata:
   name: proxy-role
 rules:
+- apiGroups: [""]
+  resources:
+  - secrets
+  verbs: ["create"]
 - apiGroups: ["authentication.k8s.io"]
   resources:
   - tokenreviews
