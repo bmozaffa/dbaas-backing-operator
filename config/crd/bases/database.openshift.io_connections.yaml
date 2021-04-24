@@ -5,6 +5,11 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
+    service.binding/db.name: 'path={.status.dbConfigMap},objectType=ConfigMap'
+    service.binding/db.host: 'path={.status.dbConfigMap},objectType=ConfigMap'
+    service.binding/db.port: 'path={.status.dbConfigMap},objectType=ConfigMap'
+    service.binding/db.user: 'path={.status.dbCredentials},objectType=Secret'
+    service.binding/db.password: 'path={.status.dbCredentials},objectType=Secret'
   creationTimestamp: null
   name: connections.database.openshift.io
 spec:
