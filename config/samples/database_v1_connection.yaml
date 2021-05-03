@@ -3,5 +3,6 @@ kind: Connection
 metadata:
   name: connection-sample
 spec:
+  type: MongoDB
   provider: atlas
   database: db1

@@ -6,7 +6,7 @@ spec:
   application:
     group: apps
     kind: Deployment
-    name: simple-busybox
+    name: mongodb-quarkus
     resource: deployments
     version: v1
   services:
@@ -14,4 +14,5 @@ spec:
       kind: Connection
       name: connection-sample
       version: v1
-  bindAsFiles: false
+  bindAsFiles: true
+  detectBindingResources: true

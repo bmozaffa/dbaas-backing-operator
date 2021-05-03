@@ -27,6 +27,9 @@ import (
 type ConnectionSpec struct {
 	//+kubebuilder:validation:Required
 	//+kubebuilder:validation:MinLength=3
+	// Type is the database type
+	Type string `json:"type"`
+
 	// Provider is the database cloud name
 	Provider string `json:"provider"`
 

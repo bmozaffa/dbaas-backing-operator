@@ -4,6 +4,8 @@ kind: CustomResourceDefinition
 metadata:
   name: connections.database.openshift.io
   annotations:
+    service.binding/type: 'path={.spec.type}'
+    service.binding/provider: 'path={.spec.provider}'
     service.binding/db.name: 'path={.status.dbConfigMap},objectType=ConfigMap'
     service.binding/db.host: 'path={.status.dbConfigMap},objectType=ConfigMap'
     service.binding/db.port: 'path={.status.dbConfigMap},objectType=ConfigMap'
